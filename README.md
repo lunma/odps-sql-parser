@@ -83,14 +83,13 @@ sql-parser/
 ├─ logs/                              # 运行时日志输出（logback）
 ├─ src/
 │  ├─ main/
-│  │  ├─ antlr4/                      # ODPS 语法定义
+│  │  ├─ antlr4/                      # ODPS 语法定义（仅提交 .g4）
 │  │  │  ├─ com/sea/odps/sql/autogen/
 │  │  │  │  └─ OdpsLexer.g4          # 词法规则定义
 │  │  │  │  └─ OdpsParser.g4         # 语法规则定义
 │  │  │  └─ imports/maxcompute/       # 导入的语法文件
 │  │  ├─ java/
 │  │  │  └─ com/sea/odps/sql/
-│  │  │     ├─ autogen/               # ANTLR 自动生成的解析类
 │  │  │     ├─ core/                  # 通用 SQL 语义模型
 │  │  │     │  ├─ enums/              # 枚举定义（排序方向、NULL 值排序、引号类型等）
 │  │  │     │  ├─ segment/            # SQL 语义片段模型
@@ -124,7 +123,18 @@ sql-parser/
 │           │  └─ extractor/          # 函数调用提取测试
 │           ├─ validation/            # 校验器测试、注释提取测试
 │           └─ OdpsAstBuilderVisitorTest.java  # AST 访问器测试
+├─ target/
+│  └─ generated-sources/
+│     └─ antlr4/                      # 构建阶段生成的解析类（不提交仓库）
+│        └─ com/sea/odps/sql/autogen/
 ```
+
+### 自动生成的解析代码
+
+- 仓库仅包含 `.g4` 语法文件，ANTLR4 插件在 `mvn compile`/`mvn package` 时自动将解析器生成到 `target/generated-sources/antlr4`。
+- 生成目录会自动加入编译 classpath，并在打包阶段被一同编译进最终的 JAR 中，因此无需也不应将 `com/sea/odps/sql/autogen/*.java` 提交到版本库。
+- 若需向他人分发可运行包，执行 `mvn clean package`（或 `mvn clean install`）即可；需要源码包时，可另外执行 `mvn -DskipTests source:jar` 产出 `*-sources.jar`。
+- 如果语法更新导致生成物发生变化，提交前运行 `mvn clean generate-sources` 或 `mvn clean package` 即可保证本地、CI 与用户环境生成的代码一致。
 
 ## 关键模块说明
 
