@@ -1,0 +1,13 @@
+target/
+effective-pom.xml
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Storegi

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.sea</groupId>
+    <artifactId>odps-sql-parser</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>odps-sql-parser</name>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.9.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.28</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.36</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.4.14</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>32.0.1-android</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.aliyun.odps</groupId>
+            <artifactId>odps-sdk-core</artifactId>
+            <version>0.43.4-public</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <testSource>1.8</testSource>
+                    <testTarget>1.8</testTarget>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-maven-plugin</artifactId>
+                <version>4.9.2</version>
+                <executions>
+                    <execution>
+                        <id>antlr</id>
+                        <goals>
+                            <goal>antlr4</goal>
+                        </goals>
+                        <configuration>
+                            <!-- 源文件目录（默认：src/main/antlr4） -->
+                            <sourceDirectory>${basedir}/src/main/antlr4</sourceDirectory>
+                            <!-- 输出目录（默认：target/generated-sources/antlr4） -->
+                            <outputDirectory>${project.build.directory}/generated-sources/antlr4</outputDirectory>
+                            <!-- 导入的语法文件目录（用于 import 语句） -->
+                            <!-- <libDirectory>${basedir}/src/main/antlr4/imports/maxcompute</libDirectory> -->
+                            <!-- 生成 Listener 接口和基类 -->
+                            <listener>true</listener>
+                            <!-- 生成 Visitor 接口和基类 -->
+                            <visitor>true</visitor>
+                            <!-- 生成详细的错误报告 -->
+                            <treatWarningsAsErrors>false</treatWarningsAsErrors>
+                            <!-- 生成包名（根据源文件目录结构自动生成，也可手动指定） -->
+                            <!-- <package>com.sea.odps.sql.autogen</package> -->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>2.30.0</version>
+                <configuration>
+                    <!-- Java 代码格式化 -->
+                    <java>
+                        <!-- 包含的文件 -->
+                        <includes>
+                            <include>src/main/java/**/*.java</include>
+                            <include>src/test/java/**/*.java</include>
+                        </includes>
+                        <!-- 排除自动生成的文件 -->
+                        <excludes>
+                            <exclude>src/main/java/com/sea/odps/sql/autogen/**/*.java</exclude>
+                            <exclude>target/**</exclude>
+                        </excludes>
+
+                        <!-- 使用 Google Java Format 进行代码格式化 -->
+                        <googleJavaFormat>
+                            <version>1.7</version>
+                            <!-- 可配置的 style 选项有 GOOGLE、AOSP、GOOGLE-ASOP（部分 spotless 版本支持），默认是 GOOGLE -->
+                            <!-- GOOGLE 风格是默认值，也是非 Android 项目的推荐选择 -->
+                            <style>GOOGLE</style>
+                        </googleJavaFormat>
+
+                        <!-- Import 语句排序 -->
+                        <importOrder>
+                            <wildcardsLast>false</wildcardsLast>
+                            <order>\#,java,javax,org,com,cn,com.sea</order>
+                        </importOrder>
+
+                        <!-- 移除未使用的导入 -->
+                        <removeUnusedImports />
+
+                        <!-- 移除尾随空格 -->
+                        <trimTrailingWhitespace />
+
+                        <!-- 文件末尾换行 -->
+                        <endWithNewline />
+
+                        <!-- 确保文件以单个换行符结尾 -->
+                        <lineEndings>UNIX</lineEndings>
+                    </java>
+
+                    <!-- POM 文件格式化 -->
+                    <pom>
+                        <sortPom>
+                            <encoding>UTF-8</encoding>
+                            <!-- 设置文件编码为 UTF-8 -->
+                            <nrOfIndentSpace>4</nrOfIndentSpace>
+                            <!-- 缩进使用 4 个空格 -->
+                            <keepBlankLines>true</keepBlankLines>
+                            <!-- 保留空行 -->
+                            <indentBlankLines>false</indentBlankLines>
+                            <!-- 空行不缩进 -->
+                            <indentSchemaLocation>true</indentSchemaLocation>
+                            <!-- 对 schemaLocation 属性单独缩进 -->
+                            <spaceBeforeCloseEmptyElement>true</spaceBeforeCloseEmptyElement>
+                            <!-- 空元素标签使用 <tag /> 而非 <tag></tag> -->
+                            <sortModules>false</sortModules>
+                            <!-- 不自动排序 <modules> 元素的顺序 -->
+                            <sortExecutions>false</sortExecutions>
+                            <!-- 不自动排序 <executions> 元素的顺序 -->
+                            <expandEmptyElements>false</expandEmptyElements>
+                            <!-- 空元素保持 <tag /> 形式，不展开为 <tag></tag> -->
+                            <sortProperties>false</sortProperties>
+                            <!-- 不自动排序 <properties> 元素 -->
+                        </sortPom>
+                    </pom>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>spotless-apply</id>
+                        <goals>
+                            <goal>apply</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                    </execution>
+
+                    <execution>
+                        <id>spotless-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
