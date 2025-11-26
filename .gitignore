@@ -1,13 +1,53 @@
 target/
 effective-pom.xml
+.flattened-pom.xml
+
+### Maven ###
+dependency-reduced-pom.xml
+*.tokens
+*.ser
+
+### Java ###
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+replay_pid*
+
+### Logs ###
+*.log
+*.log.*
 
 ### IntelliJ IDEA ###
 .idea
 *.iws
 *.iml
+out/
+
+### Eclipse ###
+.classpath
+.project
+.settings/
+bin/
+.metadata
 
 ### VS Code ###
 .vscode/
 
 ### Mac OS ###
-.DS_Storegi
+.DS_Store
+
+### Windows ###
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+### Linux ###
+*~
+.directory
+.Trash-*

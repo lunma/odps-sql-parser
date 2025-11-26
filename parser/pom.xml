@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.sea</groupId>
+        <artifactId>odps-sql-parser</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>parser</artifactId>
+    <version>${revision}</version>
+    <packaging>jar</packaging>
+    <name>parser</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.9.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.28</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.36</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.4.14</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>32.0.1-android</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.aliyun.odps</groupId>
+            <artifactId>odps-sdk-core</artifactId>
+            <version>0.43.4-public</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <testSource>${java.version}</testSource>
+                    <testTarget>${java.version}</testTarget>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-maven-plugin</artifactId>
+                <version>4.9.2</version>
+                <executions>
+                    <execution>
+                        <id>antlr</id>
+                        <goals>
+                            <goal>antlr4</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirectory>${basedir}/src/main/antlr4</sourceDirectory>
+                            <outputDirectory>${project.build.directory}/generated-sources/antlr4</outputDirectory>
+                            <listener>true</listener>
+                            <visitor>true</visitor>
+                            <treatWarningsAsErrors>false</treatWarningsAsErrors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>2.30.0</version>
+                <configuration>
+                    <java>
+                        <includes>
+                            <include>src/main/java/**/*.java</include>
+                            <include>src/test/java/**/*.java</include>
+                        </includes>
+                        <excludes>
+                            <exclude>src/main/java/com/sea/odps/sql/autogen/**/*.java</exclude>
+                            <exclude>target/**</exclude>
+                        </excludes>
+                        <googleJavaFormat>
+                            <version>1.7</version>
+                            <style>AOSP</style>
+                        </googleJavaFormat>
+                        <importOrder>
+                            <wildcardsLast>false</wildcardsLast>
+                            <order>#,java,javax,org,com,cn,com.sea</order>
+                        </importOrder>
+                        <removeUnusedImports />
+                        <trimTrailingWhitespace />
+                        <endWithNewline />
+                        <lineEndings>UNIX</lineEndings>
+                    </java>
+                    <pom>
+                        <sortPom>
+                            <encoding>UTF-8</encoding>
+                            <nrOfIndentSpace>4</nrOfIndentSpace>
+                            <keepBlankLines>true</keepBlankLines>
+                            <indentBlankLines>false</indentBlankLines>
+                            <indentSchemaLocation>true</indentSchemaLocation>
+                            <spaceBeforeCloseEmptyElement>true</spaceBeforeCloseEmptyElement>
+                            <sortModules>false</sortModules>
+                            <sortExecutions>false</sortExecutions>
+                            <expandEmptyElements>false</expandEmptyElements>
+                            <sortProperties>false</sortProperties>
+                        </sortPom>
+                    </pom>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>spotless-apply</id>
+                        <goals>
+                            <goal>apply</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                    </execution>
+                    <execution>
+                        <id>spotless-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
