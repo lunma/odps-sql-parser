@@ -51,3 +51,11 @@ $RECYCLE.BIN/
 *~
 .directory
 .Trash-*
+
+### ODPS Configuration Files ###
+# 忽略包含敏感信息的配置文件
+service/src/main/resources/odps.properties
+service/src/test/resources/odps/odps.properties
+# 但保留示例文件
+!service/src/main/resources/odps.properties.example
+!service/src/test/resources/odps/odps.properties.example
